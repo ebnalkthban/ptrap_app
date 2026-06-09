@@ -1,52 +1,30 @@
-name: Build PTRAP APK
-on: [push, pull_request]
+[app]
+title = PTRAP
+package.name = ptrap
+package.domain = org.ptrap
+source.dir = .
+source.include_exts = py,png,jpg,kv,atlas,db
+version = 1.0.0
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+# النسخ الأكثر استقراراً حالياً
+requirements = python3, kivy==2.3.0, kivymd==1.1.1, pillow
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+orientation = portrait
+fullscreen = 1
+android.archs = arm64-v8a, armeabi-v7a
+android.allow_backup = True
+android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
+icon.filename = assets/logo.png
+presplash.filename = assets/logo.png
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            build-essential \
-            git \
-            python3-dev \
-            python3-pip \
-            python3-setuptools \
-            libffi-dev \
-            libssl-dev \
-            libsqlite3-dev \
-            openjdk-17-jdk \
-            zip \
-            unzip \
-            zlib1g-dev \
-            autoconf \
-            libtool \
-            pkg-config \
-            libncurses-dev \
-            cmake
-          # تثبيت مكتبات بايثون للمستخدم وإضافتها للمسار
-          pip3 install --user --upgrade pip
-          pip3 install --user "cython<3.0" wheel buildozer
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+# تحديد نسخ الأدوات لضمان النجاح
+android.api = 33
+android.minapi = 21
+android.ndk = 25b
+android.sdk = 33
+android.skip_update = False
+android.accept_sdk_license = True
 
-      - name: Build with Buildozer
-        run: |
-          # قبول التراخيص وبناء التطبيق
-          yes | buildozer -v android debug
-        env:
-          ACCEPT_SDK_LICENSE: "y"
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: PTRAP-Android-APK
-          path: bin/*.apk
+[buildozer]
+log_level = 2
+warn_on_root = 1
