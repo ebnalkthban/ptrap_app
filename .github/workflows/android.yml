@@ -4,27 +4,31 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  # تفعيل أحدث إصدار Node
     steps:
-      - uses: actions/checkout@v4  # تم التحديث إلى v4
+      - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5  # تم التحديث إلى v5
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install system dependencies
         run: |
           sudo apt update
-          sudo apt install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+          sudo apt install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev libsqlite3-dev
+          pip install --upgrade pip
           pip install buildozer cython==0.29.33
 
       - name: Build with Buildozer
-        run: buildozer -v android debug
+        run: |
+          yes | buildozer -v android debug
         env:
           ACCEPT_SDK_LICENSE: "y"
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4  # تم التحديث إلى v4 (هذا هو الأهم)
+        uses: actions/upload-artifact@v4
         with:
           name: PTRAP-Android-APK
           path: bin/*.apk
