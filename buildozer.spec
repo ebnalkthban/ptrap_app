@@ -6,8 +6,8 @@ source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,db
 version = 1.0.0
 
-# تم تحديث النسخ هنا لضمان التوافق التام
-requirements = python3, kivy==2.3.0, kivymd==1.1.1, pillow, sqlite3
+# المتطلبات الأساسية والمستقرة فقط
+requirements = python3, kivy==2.3.0, kivymd==1.1.1, pillow
 
 orientation = portrait
 fullscreen = 1
