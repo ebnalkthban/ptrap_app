@@ -3,7 +3,6 @@ on: [push, pull_request]
 
 jobs:
   build:
-    # استخدام نسخة 22.04 لأنها الأكثر استقراراً لبناء تطبيقات الأندرويد
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -17,27 +16,16 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y \
-            git \
-            zip \
-            unzip \
-            openjdk-17-jdk \
-            autoconf \
-            libtool \
-            pkg-config \
-            zlib1g-dev \
-            libncurses5-dev \
-            libncursesw5-dev \
-            libtinfo5 \
-            cmake \
-            libffi-dev \
-            libssl-dev \
-            libsqlite3-dev
+            git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev \
+            libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev libsqlite3-dev
           
           python3 -m pip install --upgrade pip
           python3 -m pip install "cython<3.0" wheel buildozer
 
       - name: Build with Buildozer
         run: |
+          # تنظيف أي بناء قديم لضمان عدم وجود تعارض
+          buildozer android clean
           # قبول التراخيص وبناء التطبيق
           yes | buildozer -v android debug
         env:
